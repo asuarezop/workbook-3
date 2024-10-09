@@ -43,16 +43,16 @@ public class PayrollListCalApp {
                 //Creating a new employee object and passing it employee variables to constructor
                 e = new Employee(employeeID, employeeName, hoursWorked, payRate);
 
+                //Adding each new employee to employees ArrayList
                 employees.add(e);
             }
 
-            //Printing each employee in new string format
+            //Call method to print each employee in new string format
             printEmployee(employees);
 
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
-
     }
 
     private static BufferedReader openFileReader(String filename) throws FileNotFoundException {

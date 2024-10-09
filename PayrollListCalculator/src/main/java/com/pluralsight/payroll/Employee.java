@@ -30,10 +30,6 @@ public class Employee {
         return payRate;
     }
 
-    public static double getGrossPay(double hoursWorked, double payRate) {
-        return hoursWorked * payRate;
-    }
-
     public String toString(Employee e) {
 
         final StringBuilder sb = new StringBuilder();

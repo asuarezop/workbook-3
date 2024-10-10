@@ -1,0 +1,6 @@
+2024-10-10 15:57:59 launch
+2024-10-10 15:58:04 search : hello world
+2024-10-10 15:58:05 search : some car
+2024-10-10 15:58:14 search : mouse pad
+2024-10-10 15:58:20 search : exit
+2024-10-10 15:58:20 exit

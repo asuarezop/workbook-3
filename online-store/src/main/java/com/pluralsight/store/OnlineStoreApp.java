@@ -135,7 +135,12 @@ public class OnlineStoreApp {
                 """;
 
         do {
-            System.out.print(cartScreen + "Selection 1 or 2? :");
+            //Displaying all products from user's cart
+            for (Product p: shoppingCart) {
+                System.out.println("SKU: " + p.getSku() + " Name: " + p.getProductName() + " Price: " + p.getPrice() + " Department: " + p.getProductDepartment());
+            }
+
+            System.out.print(cartScreen + "Selection 1 or 2? : ");
             userInput = inputSc.nextLine().trim();
 
             switch (userInput) {

@@ -15,6 +15,7 @@ public class OnlineStoreApp {
     public static boolean exitMenu;
 
     public static ArrayList<Product> productsList;
+    public static ArrayList<String> shoppingCart;
 
     public static void main(String[] args) {
         inputSc = new Scanner(System.in);
@@ -23,6 +24,9 @@ public class OnlineStoreApp {
 
         //ArrayList to hold all our products from csv file
         productsList = new ArrayList<>();
+
+        //ArrayList to hold user's current products in their cart
+        shoppingCart = new ArrayList<>();
 
         try {
             //Have to read products.csv file and load it into products ArrayList
@@ -76,14 +80,13 @@ public class OnlineStoreApp {
     private static void showDisplayProductsScreen() {
         exitMenu = false;
         String productsScreen = """
-                ======================================================================================
+                 ======================================================================================
                  |                       * * * WELCOME TO THE E-STORE * * *                           |
                  |                                                                                    |
                  |                                - Product Menu -                                    |
                  |                                                                                    |
                  |                              1. Search Products                                    |
                  |                              2. Add a Product To Cart                              |
-                 |                              3. Remove a Product From Cart                         |
                  |                                                                                    |
                  |             Hit Q to exit menu        |        Hit X to go back to Home Screen     |
                  ======================================================================================
@@ -100,13 +103,10 @@ public class OnlineStoreApp {
 
             switch (userInput) {
                 case "1":
-                    searchProductFromCart();
+                    searchProductFromCart(productsList);
                     break;
                 case "2":
                     addProductToCart();
-                    break;
-                case "3":
-                    removeProductFromCart();
                     break;
                 case "X", "x":
                     showHomeScreen();
@@ -121,15 +121,75 @@ public class OnlineStoreApp {
     }
 
     private static void showDisplayCartScreen() {
+        exitMenu = false;
+        String cartScreen = """
+                 ======================================================================================
+                 |                       * * * WELCOME TO THE E-STORE * * *                           |
+                 |                                                                                    |
+                 |                                - Cart Menu -                                       |
+                 |                                                                                    |
+                 |                              1. Check Out                                          |
+                 |                              2. Remove a Product To Cart                           |
+                 |                                                                                    |
+                 |             Hit Q to exit menu        |        Hit X to go back to Home Screen     |
+                 ======================================================================================
+                """;
+
+        do {
+            System.out.print(cartScreen + "Selection 1 or 2? :");
+            userInput = inputSc.nextLine().trim();
+
+            switch (userInput) {
+                case "1":
+                    checkOut();
+                    break;
+                case "2":
+                    removeProductFromCart();
+                    break;
+                case "X", "x":
+                    showHomeScreen();
+                    break;
+                case "Q", "q":
+                    exitMenu = true;
+                    break;
+                default:
+                    throw new Error("Sorry, that's not a valid option. Please make your selection.");
+            }
+        } while(!exitMenu);
     }
 
-    private static void searchProductFromCart() {
+    //Should be methods on Product class ?
+    private static void searchProductFromCart(ArrayList<Product> products) {
+        String searchTerm;
+        System.out.println("Enter the product name you'd like to search: ");
+        searchTerm = inputSc.nextLine().trim().toLowerCase();
+
+        //Search with subString doesn't work
+//        for (int i = 0; i < products.size(); i++) {
+//            if (searchTerm.substring(0, searchTerm.length() - 1).equals(products.get(i))) {
+//                System.out.println(products.get(i));
+//            }
+//        }
+
+        //If the searchTerm string matches any of the product names, return only that product
+        if (!searchTerm.isEmpty()) {
+            for (Product p: products) {
+                if (searchTerm.equalsIgnoreCase(p.getProductName())) {
+                    System.out.println("Search product result: " + p.getSku() + "|" + p.getProductName() + "|" + p.getPrice() + "|" + p.getProductDepartment());
+                    break;
+                }
+            }
+        }
     }
 
     private static void addProductToCart() {
+
     }
 
     private static void removeProductFromCart() {
+    }
+
+    private static void checkOut() {
     }
 
     //Methods to read products.csv file

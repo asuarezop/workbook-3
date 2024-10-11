@@ -31,4 +31,5 @@ public class Product {
     public String getProductDepartment() {
         return productDepartment;
     }
+
 }

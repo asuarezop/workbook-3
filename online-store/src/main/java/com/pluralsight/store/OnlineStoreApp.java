@@ -14,13 +14,15 @@ public class OnlineStoreApp {
     public static String userInput;
     public static boolean exitMenu;
 
+    public static ArrayList<Product> productsList;
+
     public static void main(String[] args) {
         inputSc = new Scanner(System.in);
 
         String productsFilePath = "src/main/resources/products.csv";
 
         //ArrayList to hold all our products from csv file
-        ArrayList<Product> productsList = new ArrayList<>();
+        productsList = new ArrayList<>();
 
         try {
             //Have to read products.csv file and load it into products ArrayList
@@ -88,6 +90,11 @@ public class OnlineStoreApp {
                 """;
 
         do {
+            //Show all list of products that store is selling
+            for (Product p: productsList) {
+                System.out.println("SKU: " + p.getSku() + " Name: " + p.getProductName() + " Price: " + p.getPrice() + " Department: " + p.getProductDepartment());
+            }
+
             System.out.print(productsScreen + "Selection 1 or 2? : ");
             userInput = inputSc.nextLine().trim();
 
@@ -140,7 +147,7 @@ public class OnlineStoreApp {
 
             //Skip the first line of the file
             bufReader.readLine();
-            
+
             while ((fileContents = bufReader.readLine()) != null) {
                 //Storing file contents as an array of objects, splitting contents at |
                 String[] productsData = fileContents.split("\\|");

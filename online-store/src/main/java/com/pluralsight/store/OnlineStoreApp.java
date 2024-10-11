@@ -15,7 +15,7 @@ public class OnlineStoreApp {
     public static boolean exitMenu;
 
     public static ArrayList<Product> productsList;
-    public static ArrayList<String> shoppingCart;
+    public static ArrayList<Product> shoppingCart;
 
     public static void main(String[] args) {
         inputSc = new Scanner(System.in);
@@ -31,7 +31,6 @@ public class OnlineStoreApp {
         try {
             //Have to read products.csv file and load it into products ArrayList
             productsList = readProducts(productsFilePath);
-
 
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
@@ -106,7 +105,7 @@ public class OnlineStoreApp {
                     searchProductFromCart(productsList);
                     break;
                 case "2":
-                    addProductToCart();
+                    addProductToCart(productsList);
                     break;
                 case "X", "x":
                     showHomeScreen();
@@ -144,7 +143,7 @@ public class OnlineStoreApp {
                     checkOut();
                     break;
                 case "2":
-                    removeProductFromCart();
+                    removeProductFromCart(productsList);
                     break;
                 case "X", "x":
                     showHomeScreen();
@@ -164,32 +163,50 @@ public class OnlineStoreApp {
         System.out.println("Enter the product name you'd like to search: ");
         searchTerm = inputSc.nextLine().trim().toLowerCase();
 
-        //Search with subString doesn't work
-//        for (int i = 0; i < products.size(); i++) {
-//            if (searchTerm.substring(0, searchTerm.length() - 1).equals(products.get(i))) {
-//                System.out.println(products.get(i));
-//            }
-//        }
-
         //If the searchTerm string matches any of the product names, return only that product
         if (!searchTerm.isEmpty()) {
             for (Product p: products) {
                 if (searchTerm.equalsIgnoreCase(p.getProductName())) {
                     System.out.println("Search product result: " + p.getSku() + "|" + p.getProductName() + "|" + p.getPrice() + "|" + p.getProductDepartment());
-                    break;
                 }
             }
         }
     }
 
-    private static void addProductToCart() {
+    private static void addProductToCart(ArrayList<Product> products) {
+        //Get user input to ask for product
+        System.out.println("What product do you want to add to cart? (product name only): ");
+        userInput = inputSc.nextLine().trim().toLowerCase();
 
+        //Add product to cart
+        for (Product product: products) {
+            if (userInput.equalsIgnoreCase(product.getProductName()) && !userInput.isEmpty()) {
+                shoppingCart.add(product);
+
+                //Final output should be confirmation message to user about product being added to cart
+                System.out.println("Product added to cart: " + product.getProductName());
+            }
+        }
     }
 
-    private static void removeProductFromCart() {
+    private static void removeProductFromCart(ArrayList<Product> products) {
+        //Get user input to ask for product
+        System.out.println("What product do you want to add to cart? (product name only): ");
+        userInput = inputSc.nextLine().trim().toLowerCase();
+
+        //Removing a product from cart
+        for (Product product: products) {
+            if (userInput.equalsIgnoreCase(product.getProductName()) && !userInput.isEmpty()) {
+                shoppingCart.remove(product);
+
+                //Final output should be confirmation message to user about product being removed from cart
+                System.out.println("Product removed to cart: " + product.getProductName());
+            }
+        }
     }
 
     private static void checkOut() {
+
     }
 
     //Methods to read products.csv file

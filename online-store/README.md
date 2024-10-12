@@ -14,7 +14,7 @@
 ```declarative
 //Showing full list of products that the store sells
 for (Product p: productsList) {
-System.out.println("SKU: " + p.getSku() + " Name: " + p.getProductName() + " Price: " + p.getPrice() + " Department: " + p.getProductDepartment());
+    System.out.println("SKU: " + p.getSku() + " Name: " + p.getProductName() + " Price: " + p.getPrice() + " Department: " + p.getProductDepartment());
 }
 ```
 ![Show all products alt](src/main/resources/images/ShowAllProducts.png)
@@ -23,12 +23,12 @@ System.out.println("SKU: " + p.getSku() + " Name: " + p.getProductName() + " Pri
 ```declarative
 //Add product to cart
 for (Product product : products) {
-if (userInput.equalsIgnoreCase(product.getProductName()) && !userInput.isEmpty()) {
-shoppingCart.add(product);
+    if (userInput.equalsIgnoreCase(product.getProductName()) && !userInput.isEmpty()) {
+        shoppingCart.add(product);
 
-//Final output should be confirmation message to user about product being added to cart
-System.out.println(successActionColor + italicText + "Product added to cart: " + resetText + product.getProductName());
-}
+        //Final output should be confirmation message to user about product being added to cart
+        System.out.println(successActionColor + italicText + "Product added to cart: " + resetText + product.getProductName());
+    }
 }
 ```
 ![Adding products to cart alt](src/main/resources/images/AddingProductToCart.png)
@@ -37,15 +37,24 @@ System.out.println(successActionColor + italicText + "Product added to cart: " +
 ```declarative
 //Removing a product from cart
 for (Product product : products) {
-if (userInput.equalsIgnoreCase(product.getProductName()) && !userInput.isEmpty()) {
-shoppingCart.remove(product);
+    if (userInput.equalsIgnoreCase(product.getProductName()) && !userInput.isEmpty()) {
+        shoppingCart.remove(product);
 
-//Final output should be confirmation message to user about product being removed from cart
-System.out.println(successActionColor + "Product removed to cart: " + product.getProductName());
-}
+        //Final output should be confirmation message to user about product being removed from cart
+        System.out.println(successActionColor + "Product removed to cart: " + product.getProductName());
+    }
 }
 ```
 ![Removing products from cart alt](src/main/resources/images/RemoveProductFromCart.png)
 
 ### Error Handling:
 ![Online store error message alt](src/main/resources/images/ErrorMessage.png)
+
+### Dev Highlights
+One interesting challenge was being able to handle adding and removing products to a new ArrayList.
+
+I found that looping through existing products to see if the user's input matched a valid product from the products ArrayList fun and interesting challenge.
+- With the .equalsIgnoreCase() on strings, I was able to isolate the right product and display it to the user.
+
+### Author
+Anthony Suarez - https://github.com/asuarezop

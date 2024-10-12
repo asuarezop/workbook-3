@@ -17,6 +17,17 @@ public class OnlineStoreApp {
     public static ArrayList<Product> productsList;
     public static ArrayList<Product> shoppingCart;
 
+    public static String escapeKey = "\033";
+    public static String italicText = escapeKey + "[3m";
+    public static String resetText = escapeKey + "[23m";
+    public static String productSkuColor = escapeKey + "[38;5;12m";
+    public static String productNameColor = escapeKey + "[38;5;50m";
+    public static String productPriceColor = escapeKey + "[38;5;220m";
+    public static String productDeptColor = escapeKey + "[38;5;170m";
+    public static String successActionColor = escapeKey + "[38;5;46m";
+    public static String allScreensColor = escapeKey + "[38;5;153m";
+    public static String promptTextColor = escapeKey + "[38;5;231m";
+
     public static void main(String[] args) {
         inputSc = new Scanner(System.in);
 
@@ -56,7 +67,7 @@ public class OnlineStoreApp {
                 """;
 
         do {
-            System.out.print(homeScreen + "Selection 1 or 2? : ");
+            System.out.print(allScreensColor + homeScreen + "Selection 1 or 2? : ");
             userInput = inputSc.nextLine().trim();
 
             switch (userInput) {
@@ -92,12 +103,12 @@ public class OnlineStoreApp {
                 """;
 
         do {
-            //Show all list of products that store is selling
-            for (Product p: productsList) {
-                System.out.println("SKU: " + p.getSku() + " Name: " + p.getProductName() + " Price: " + p.getPrice() + " Department: " + p.getProductDepartment());
+            //Showing full list of products that the store sells
+            for (Product p : productsList) {
+                System.out.println(productSkuColor + "SKU: " + p.getSku() + productNameColor + " Name: " + p.getProductName() + productPriceColor + " Price: " + p.getPrice() + productDeptColor + " Department: " + p.getProductDepartment());
             }
 
-            System.out.print(productsScreen + "Selection 1 or 2? : ");
+            System.out.print(allScreensColor + productsScreen + "Selection 1 or 2? : ");
             userInput = inputSc.nextLine().trim();
 
             switch (userInput) {
@@ -136,11 +147,11 @@ public class OnlineStoreApp {
 
         do {
             //Displaying all products from user's cart
-            for (Product p: shoppingCart) {
-                System.out.println("SKU: " + p.getSku() + " Name: " + p.getProductName() + " Price: " + p.getPrice() + " Department: " + p.getProductDepartment());
+            for (Product p : shoppingCart) {
+                System.out.println(productSkuColor + "SKU: " + p.getSku() + productNameColor + " Name: " + p.getProductName() + productPriceColor + " Price: " + p.getPrice() + productDeptColor + " Department: " + p.getProductDepartment());
             }
 
-            System.out.print(cartScreen + "Selection 1 or 2? : ");
+            System.out.print(allScreensColor + cartScreen + "Selection 1 or 2? : ");
             userInput = inputSc.nextLine().trim();
 
             switch (userInput) {
@@ -159,20 +170,20 @@ public class OnlineStoreApp {
                 default:
                     throw new Error("Sorry, that's not a valid option. Please make your selection.");
             }
-        } while(!exitMenu);
+        } while (!exitMenu);
     }
 
-    //Should be methods on Product class ?
+    //Action methods
     private static void searchProductFromCart(ArrayList<Product> products) {
         String searchTerm;
-        System.out.println("Enter the product name you'd like to search: ");
+        System.out.println(promptTextColor + "Enter the product name you'd like to search: ");
         searchTerm = inputSc.nextLine().trim().toLowerCase();
 
         //If the searchTerm string matches any of the product names, return only that product
         if (!searchTerm.isEmpty()) {
-            for (Product p: products) {
+            for (Product p : products) {
                 if (searchTerm.equalsIgnoreCase(p.getProductName())) {
-                    System.out.println("Search product result: " + p.getSku() + "|" + p.getProductName() + "|" + p.getPrice() + "|" + p.getProductDepartment());
+                    System.out.println(successActionColor + italicText + "Search product result: " + resetText + p.getSku() + "|" + p.getProductName() + "|" + p.getPrice() + "|" + p.getProductDepartment());
                 }
             }
         }
@@ -180,32 +191,32 @@ public class OnlineStoreApp {
 
     private static void addProductToCart(ArrayList<Product> products) {
         //Get user input to ask for product
-        System.out.println("What product do you want to add to cart? (product name only): ");
+        System.out.println(promptTextColor + "What product do you want to add to cart? (product name only): ");
         userInput = inputSc.nextLine().trim().toLowerCase();
 
         //Add product to cart
-        for (Product product: products) {
+        for (Product product : products) {
             if (userInput.equalsIgnoreCase(product.getProductName()) && !userInput.isEmpty()) {
                 shoppingCart.add(product);
 
                 //Final output should be confirmation message to user about product being added to cart
-                System.out.println("Product added to cart: " + product.getProductName());
+                System.out.println(successActionColor + italicText + "Product added to cart: " + resetText + product.getProductName());
             }
         }
     }
 
     private static void removeProductFromCart(ArrayList<Product> products) {
         //Get user input to ask for product
-        System.out.println("What product do you want to add to cart? (product name only): ");
+        System.out.println(promptTextColor + "What product do you want to add to cart? (product name only): ");
         userInput = inputSc.nextLine().trim().toLowerCase();
 
         //Removing a product from cart
-        for (Product product: products) {
+        for (Product product : products) {
             if (userInput.equalsIgnoreCase(product.getProductName()) && !userInput.isEmpty()) {
                 shoppingCart.remove(product);
 
                 //Final output should be confirmation message to user about product being removed from cart
-                System.out.println("Product removed to cart: " + product.getProductName());
+                System.out.println(successActionColor + "Product removed to cart: " + product.getProductName());
             }
         }
     }
@@ -248,7 +259,7 @@ public class OnlineStoreApp {
             }
 
             //Printing success message when file is done being read
-            System.out.println("File was successfully read!");
+            System.out.println(successActionColor + "File was successfully read!");
 
             //Closing bufReader
             bufReader.close();

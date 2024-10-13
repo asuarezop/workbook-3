@@ -156,7 +156,7 @@ public class OnlineStoreApp {
 
             switch (userInput) {
                 case "1":
-                    checkOut();
+                    checkOut(shoppingCart);
                     break;
                 case "2":
                     removeProductFromCart(productsList);
@@ -221,7 +221,56 @@ public class OnlineStoreApp {
         }
     }
 
-    private static void checkOut() {
+    private static void checkOut(ArrayList<Product> cart) {
+        double parsedPay;
+        String payment;
+        double totalCart;
+        double changeFromPurchase;
+
+        //Get user input to ask for payment
+        System.out.println(promptTextColor + "Would you be paying with cash or card?: \n1. Cash 2. Card");
+        userInput = inputSc.nextLine().trim();
+
+        //Control flow for user selection
+        if (userInput.equals("1")) {
+            System.out.println("Enter the amount of cash to complete purchase: ");
+            payment = inputSc.nextLine().trim();
+            parsedPay = Double.parseDouble(payment);
+
+            //Calculate total for shoppingCart
+            totalCart = getSalesTotal(parsedPay, cart);
+
+            //Calculate change owed to user
+            changeFromPurchase = getChangeOwed(parsedPay, totalCart);
+
+            //Print sales receipt to user
+        }
+    }
+
+    private static double getSalesTotal(double userPay, ArrayList<Product> cart) {
+        double cartTotal = 0;
+
+        for (Product p: cart) {
+            //Add up all pricing for each product inside cart
+            cartTotal += p.getPrice();
+        }
+
+        return cartTotal;
+    }
+
+    private static double getChangeOwed(double userPay, double totalCart) {
+        double changeFromTotal = 0;
+
+        if (userPay >= totalCart) {
+            changeFromTotal = userPay - totalCart;
+            return changeFromTotal;
+        } else {
+            System.out.println("Pay provided is insufficient to cover full purchase.");
+        }
+        return changeFromTotal;
+    }
+
+    private static void printSalesReceipt(double salesTotal, double userPay, double changeOwed, ArrayList<Product> cart) {
 
     }
 

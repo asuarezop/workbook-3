@@ -303,32 +303,9 @@ public class OnlineStoreApp {
             }
 
         } while (!exitMenu);
-
-
     }
 
-    private static double getSalesTotal(ArrayList<Product> cart) {
-        double cartTotal = 0.0;
-
-        for (Product p : cart) {
-            //Add up all pricing for each product inside cart
-            cartTotal += p.getPrice();
-        }
-        return cartTotal;
-    }
-
-    private static double getChangeOwed(double userPay, double totalCart) {
-        double changeFromTotal = 0.0;
-
-        if (userPay >= totalCart) {
-            changeFromTotal = userPay - totalCart;
-
-        } else {
-            System.out.println("Pay provided is insufficient to cover full purchase.");
-        }
-        return changeFromTotal;
-    }
-
+    //Method to print final receipt to screen and writing to file
     private static void printSalesReceipt(LocalDateTime saleDate, String[] orderDate, double salesTotal, double userPay, double changeOwed, ArrayList<Product> cart) {
         String fileTimestamp = getFileTimestamp(saleDate);
 
@@ -339,7 +316,7 @@ public class OnlineStoreApp {
             BufferedWriter bufWriter = new BufferedWriter(fileWriter);
 
             //Writing to order details to file
-            bufWriter.write("********** E-STORE **********");
+            bufWriter.write("********** E-STORE **********" + "\n");
             bufWriter.write("Date: " + orderDate[0] + " " + orderDate[1] + "\n");
             bufWriter.write("--------------------------------------------" + "\n");
 
@@ -369,6 +346,7 @@ public class OnlineStoreApp {
         }
     }
 
+    //Methods for order/receipt processing and formatting
     private static String getFileTimestamp(LocalDateTime saleDate) {
         //Date to print to file
         DateTimeFormatter traditionalDate = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -391,6 +369,28 @@ public class OnlineStoreApp {
         String receiptTime = saleDate.format(formattedTime);
 
         return receiptDate + "|" + receiptTime;
+    }
+
+    private static double getSalesTotal(ArrayList<Product> cart) {
+        double cartTotal = 0.0;
+
+        for (Product p : cart) {
+            //Add up all pricing for each product inside cart
+            cartTotal += p.getPrice();
+        }
+        return cartTotal;
+    }
+
+    private static double getChangeOwed(double userPay, double totalCart) {
+        double changeFromTotal = 0.0;
+
+        if (userPay >= totalCart) {
+            changeFromTotal = userPay - totalCart;
+
+        } else {
+            System.out.println("Pay provided is insufficient to cover full purchase.");
+        }
+        return changeFromTotal;
     }
 
     //Methods to read products.csv file

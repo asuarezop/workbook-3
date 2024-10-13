@@ -1,9 +1,8 @@
 package com.pluralsight.store;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -90,16 +89,16 @@ public class OnlineStoreApp {
     private static void showDisplayProductsScreen() {
         exitMenu = false;
         String productsScreen = """
-                 ======================================================================================
-                 |                       * * * WELCOME TO THE E-STORE * * *                           |
-                 |                                                                                    |
-                 |                                - Product Menu -                                    |
-                 |                                                                                    |
-                 |                              1. Search Products                                    |
-                 |                              2. Add a Product To Cart                              |
-                 |                                                                                    |
-                 |             Hit Q to exit menu        |        Hit X to go back to Home Screen     |
-                 ======================================================================================
+                ======================================================================================
+                |                       * * * WELCOME TO THE E-STORE * * *                           |
+                |                                                                                    |
+                |                                - Product Menu -                                    |
+                |                                                                                    |
+                |                              1. Search Products                                    |
+                |                              2. Add a Product To Cart                              |
+                |                                                                                    |
+                |             Hit Q to exit menu        |        Hit X to go back to Home Screen     |
+                ======================================================================================
                 """;
 
         do {
@@ -133,16 +132,16 @@ public class OnlineStoreApp {
     private static void showDisplayCartScreen() {
         exitMenu = false;
         String cartScreen = """
-                 ======================================================================================
-                 |                       * * * WELCOME TO THE E-STORE * * *                           |
-                 |                                                                                    |
-                 |                                - Cart Menu -                                       |
-                 |                                                                                    |
-                 |                              1. Check Out                                          |
-                 |                              2. Remove a Product To Cart                           |
-                 |                                                                                    |
-                 |             Hit Q to exit menu        |        Hit X to go back to Home Screen     |
-                 ======================================================================================
+                ======================================================================================
+                |                       * * * WELCOME TO THE E-STORE * * *                           |
+                |                                                                                    |
+                |                                - Cart Menu -                                       |
+                |                                                                                    |
+                |                              1. Check Out                                          |
+                |                              2. Remove a Product To Cart                           |
+                |                                                                                    |
+                |             Hit Q to exit menu        |        Hit X to go back to Home Screen     |
+                ======================================================================================
                 """;
 
         do {
@@ -222,56 +221,176 @@ public class OnlineStoreApp {
     }
 
     private static void checkOut(ArrayList<Product> cart) {
+        exitMenu = false;
         double parsedPay;
         String payment;
         double totalCart;
         double changeFromPurchase;
+        LocalDateTime saleDate = LocalDateTime.now();
+        String[] orderDateTimeFormats;
+        String checkOutScreen = """
+                ======================================================================================
+                |                           * * * E-STORE CHECKOUT * * *                             |
+                |                                                                                    |
+                |                                    1. Cash                                         |
+                |                                    2. Card                                         |
+                |                                                                                    |
+                |       Hit Q to cancel transaction      |       Hit X to go back to Home Screen     |
+                ======================================================================================
+                """;
 
-        //Get user input to ask for payment
-        System.out.println(promptTextColor + "Would you be paying with cash or card?: \n1. Cash 2. Card");
-        userInput = inputSc.nextLine().trim();
+        do {
+            //Get user input to ask for payment
+            System.out.print(allScreensColor + checkOutScreen + resetText + promptTextColor + "Would you be paying with cash or card?: ");
+            userInput = inputSc.nextLine().trim();
 
-        //Control flow for user selection
-        if (userInput.equals("1")) {
-            System.out.println("Enter the amount of cash to complete purchase: ");
-            payment = inputSc.nextLine().trim();
-            parsedPay = Double.parseDouble(payment);
+            switch (userInput) {
+                case "1":
+                    //Get receipt date and time for this checkout transaction and store it inside new String[] array
+                    orderDateTimeFormats = getReceiptDateTime(saleDate).split("\\|");
 
-            //Calculate total for shoppingCart
-            totalCart = getSalesTotal(parsedPay, cart);
+                    //Printing order date to the screen
+                    System.out.println("\n********** E-STORE **********");
+                    System.out.println("Date: " + orderDateTimeFormats[0] + " " + orderDateTimeFormats[1]);
+                    System.out.println("--------------------------------------------");
 
-            //Calculate change owed to user
-            changeFromPurchase = getChangeOwed(parsedPay, totalCart);
+                    //Printing line items to the screen
+                    for (Product p : cart) {
+                        System.out.print(p.getSku() + " " + p.getProductName() + " " + "$" + p.getPrice() + "\n");
+                    }
 
-            //Print sales receipt to user
-        }
+                    System.out.println("--------------------------------------------");
+
+                    //Calculate total for shoppingCart
+                    totalCart = getSalesTotal(cart);
+
+                    //Printing sales total from this purchase to the user
+                    System.out.println("Sales Total: $" + totalCart + "\n");
+
+                    //Prompt user for cash
+                    System.out.println("Enter amount of cash on hand to complete your purchase: ");
+                    payment = inputSc.nextLine().trim();
+                    parsedPay = Double.parseDouble(payment);
+
+                    //Calculate change owed to user
+                    changeFromPurchase = getChangeOwed(parsedPay, totalCart);
+
+                    System.out.println("--------------------------------------------");
+
+                    //Printing amount paid and change owed to user
+                    System.out.println("Amount Paid: $" + parsedPay);
+                    System.out.println("Change Due: $" + changeFromPurchase);
+
+                    //Print sales receipt to user
+                    printSalesReceipt(saleDate, orderDateTimeFormats, totalCart, parsedPay, changeFromPurchase, cart);
+
+                    //Final message to user for completing transaction
+                    System.out.println("Thank you for shopping with us at the E-STORE! Have a nice day :)");
+
+                    //Return to homeScreen
+                    showHomeScreen();
+                    break;
+                case "2":
+                    System.out.println("Debit or credit?: ");
+                case "Q", "q":
+                    exitMenu = true;
+                    break;
+                case "X", "x":
+                    showHomeScreen();
+                    break;
+                default:
+                    throw new Error("Sorry, that's not a valid option. Please make your selection.");
+            }
+
+        } while (!exitMenu);
+
+
     }
 
-    private static double getSalesTotal(double userPay, ArrayList<Product> cart) {
-        double cartTotal = 0;
+    private static double getSalesTotal(ArrayList<Product> cart) {
+        double cartTotal = 0.0;
 
-        for (Product p: cart) {
+        for (Product p : cart) {
             //Add up all pricing for each product inside cart
             cartTotal += p.getPrice();
         }
-
         return cartTotal;
     }
 
     private static double getChangeOwed(double userPay, double totalCart) {
-        double changeFromTotal = 0;
+        double changeFromTotal = 0.0;
 
         if (userPay >= totalCart) {
             changeFromTotal = userPay - totalCart;
-            return changeFromTotal;
+
         } else {
             System.out.println("Pay provided is insufficient to cover full purchase.");
         }
         return changeFromTotal;
     }
 
-    private static void printSalesReceipt(double salesTotal, double userPay, double changeOwed, ArrayList<Product> cart) {
+    private static void printSalesReceipt(LocalDateTime saleDate, String[] orderDate, double salesTotal, double userPay, double changeOwed, ArrayList<Product> cart) {
+        String fileTimestamp = getFileTimestamp(saleDate);
 
+        String receiptsFilePath = "src/main/resources/receipts/" + fileTimestamp + ".txt";
+
+        try {
+            FileWriter fileWriter = new FileWriter(receiptsFilePath);
+            BufferedWriter bufWriter = new BufferedWriter(fileWriter);
+
+            //Writing to order details to file
+            bufWriter.write("********** E-STORE **********");
+            bufWriter.write("Date: " + orderDate[0] + " " + orderDate[1] + "\n");
+            bufWriter.write("--------------------------------------------" + "\n");
+
+            //Writing all line items
+            for (Product p : cart) {
+                bufWriter.write(p.getSku() + " " + p.getProductName() + " " + "$" + p.getPrice() + "\n");
+            }
+
+            bufWriter.write("--------------------------------------------" + "\n");
+
+            //Order payment info
+            bufWriter.write("Sales Total: $" + salesTotal + "\n");
+            bufWriter.write("Amount Paid: $" + userPay + "\n");
+            bufWriter.write("Change Due: $" + changeOwed + "\n");
+
+            //Final message to user for completing transaction
+            bufWriter.write("Thank you for shopping with us at the E-STORE! Have a nice day :)");
+
+            //Clear the cart
+            cart.clear();
+
+            //To close bufWriter stream
+            bufWriter.close();
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static String getFileTimestamp(LocalDateTime saleDate) {
+        //Date to print to file
+        DateTimeFormatter traditionalDate = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String orderDate = saleDate.format(traditionalDate);
+
+        //Time to print onto file
+        DateTimeFormatter traditionalTime = DateTimeFormatter.ofPattern("HHmm");
+        String orderTime = saleDate.format(traditionalTime);
+
+        return orderDate + orderTime;
+    }
+
+    private static String getReceiptDateTime(LocalDateTime saleDate) {
+        //Receipt date in a readable format
+        DateTimeFormatter formattedDate = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        String receiptDate = saleDate.format(formattedDate);
+
+        //Receipt time in a readable format
+        DateTimeFormatter formattedTime = DateTimeFormatter.ofPattern("HH:mm a");
+        String receiptTime = saleDate.format(formattedTime);
+
+        return receiptDate + "|" + receiptTime;
     }
 
     //Methods to read products.csv file

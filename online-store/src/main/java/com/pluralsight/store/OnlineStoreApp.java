@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.TimeZone;
 
 public class OnlineStoreApp {
 
@@ -251,21 +252,25 @@ public class OnlineStoreApp {
 
                     //Printing order date to the screen
                     System.out.println("\n********** E-STORE **********");
-                    System.out.println("Date: " + orderDateTimeFormats[0] + " " + orderDateTimeFormats[1]);
-                    System.out.println("--------------------------------------------");
+                    System.out.println("Date: " + orderDateTimeFormats[0] + "     " + orderDateTimeFormats[1]);
+                    System.out.println("------------------------------------");
 
                     //Printing line items to the screen
                     for (Product p : cart) {
-                        System.out.print(p.getSku() + " " + p.getProductName() + " " + "$" + p.getPrice() + "\n");
+                        //To get padding between line item and price
+                        int lineItemPadding = getPadding(cart);
+
+                        System.out.print(p.getSku() + " " + p.getProductName() + " " + String.format("%" + lineItemPadding + "s", ""));
+                        System.out.printf("$%.2f \n", p.getPrice());
                     }
 
-                    System.out.println("--------------------------------------------");
+                    System.out.println("------------------------------------");
 
                     //Calculate total for shoppingCart
                     totalCart = getSalesTotal(cart);
 
                     //Printing sales total from this purchase to the user
-                    System.out.println("Sales Total: $" + totalCart + "\n");
+                    System.out.printf("Sales Total: $%.2f \n", totalCart);
 
                     //Prompt user for cash
                     System.out.println("Enter amount of cash on hand to complete your purchase: ");
@@ -275,11 +280,11 @@ public class OnlineStoreApp {
                     //Calculate change owed to user
                     changeFromPurchase = getChangeOwed(parsedPay, totalCart);
 
-                    System.out.println("--------------------------------------------");
+                    System.out.println("------------------------------------");
 
                     //Printing amount paid and change owed to user
-                    System.out.println("Amount Paid: $" + parsedPay);
-                    System.out.println("Change Due: $" + changeFromPurchase);
+                    System.out.printf("Amount Paid: $%.2f \n", parsedPay);
+                    System.out.printf("Change Due: $%.2f \n", changeFromPurchase);
 
                     //Print sales receipt to user
                     printSalesReceipt(saleDate, orderDateTimeFormats, totalCart, parsedPay, changeFromPurchase, cart);
@@ -317,20 +322,24 @@ public class OnlineStoreApp {
 
             //Writing to order details to file
             bufWriter.write("********** E-STORE **********" + "\n");
-            bufWriter.write("Date: " + orderDate[0] + " " + orderDate[1] + "\n");
-            bufWriter.write("--------------------------------------------" + "\n");
+            bufWriter.write("Date: " + orderDate[0] + "     " + orderDate[1] + "\n");
+            bufWriter.write("------------------------------------\n");
 
             //Writing all line items
             for (Product p : cart) {
-                bufWriter.write(p.getSku() + " " + p.getProductName() + " " + "$" + p.getPrice() + "\n");
+                //To get padding between line item and price
+                int lineItemPadding = getPadding(cart);
+
+                bufWriter.write(p.getSku() + " " + p.getProductName() + " " + String.format("%" + lineItemPadding + "s", ""));
+                bufWriter.write(String.format("$%.2f \n", p.getPrice()));
             }
 
-            bufWriter.write("--------------------------------------------" + "\n");
+            bufWriter.write("------------------------------------\n");
 
             //Order payment info
-            bufWriter.write("Sales Total: $" + salesTotal + "\n");
-            bufWriter.write("Amount Paid: $" + userPay + "\n");
-            bufWriter.write("Change Due: $" + changeOwed + "\n");
+            bufWriter.write("Sales Total: $" + String.format("%.2f", salesTotal) + "\n");
+            bufWriter.write("Amount Paid: $" + String.format("%.2f", userPay) + "\n");
+            bufWriter.write("Change Due: $" + String.format("%.2f", changeOwed) + "\n\n");
 
             //Final message to user for completing transaction
             bufWriter.write("Thank you for shopping with us at the E-STORE! Have a nice day :)");
@@ -391,6 +400,22 @@ public class OnlineStoreApp {
             System.out.println("Pay provided is insufficient to cover full purchase.");
         }
         return changeFromTotal;
+    }
+
+    private static int getPadding(ArrayList<Product> cart) {
+        int padding = 0;
+
+        for (Product p : cart) {
+            //Calculating amount of padding for line item output
+            String orderDetails = p.getSku() + " " + p.getProductName() + " " + String.format("$%.2f \n", p.getPrice());
+//            String rightOutput = String.format("$%.2f \n", p.getPrice());
+            String refString = "------------------------------------"; //length == 36
+
+            padding  = refString.length() - orderDetails.length();
+//            padding = refString.length() - (leftOutput.length() + rightOutput.length()); //works okay but not every item aligns
+        }
+
+        return padding;
     }
 
     //Methods to read products.csv file

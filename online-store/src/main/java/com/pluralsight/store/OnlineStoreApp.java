@@ -2,6 +2,7 @@ package com.pluralsight.store;
 
 import java.io.*;
 import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -258,7 +259,7 @@ public class OnlineStoreApp {
 
                     //Printing order date to the screen
                     System.out.println("\n***************** E-STORE *****************");
-                    System.out.println("Date: " + orderDateTimeFormats[0] + "     " + orderDateTimeFormats[1]);
+                    System.out.println("Date: " + orderDateTimeFormats[0] + "                   " + orderDateTimeFormats[1]);
                     System.out.println("-------------------------------------------");
 
                     //Printing line items to the screen
@@ -329,7 +330,7 @@ public class OnlineStoreApp {
 
             //Writing to order details to file
             bufWriter.write("***************** E-STORE *****************\n");
-            bufWriter.write("Date: " + orderDate[0] + "     " + orderDate[1] + "\n");
+            bufWriter.write("Date: " + orderDate[0] + "                   " + orderDate[1] + "\n");
             bufWriter.write("-------------------------------------------\n");
 
             //Writing all line items
@@ -380,7 +381,7 @@ public class OnlineStoreApp {
 
     private static String getReceiptDateTime(LocalDateTime saleDate) {
         //Receipt date in a readable format
-        DateTimeFormatter formattedDate = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        DateTimeFormatter formattedDate = DateTimeFormatter.ofPattern("MM/dd/yyyy");
         String receiptDate = saleDate.format(formattedDate);
 
         //Receipt time in a readable format

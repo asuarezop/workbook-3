@@ -1,12 +1,12 @@
 ***************** E-STORE *****************
-Date: 10-13-2024     22:19 PM
+Date: 10/13/2024                   22:47 PM
 -------------------------------------------
-AV1051 JBL Bluetooth Speaker        $89.95 
 AV1423 Apple AirPods 4              $129.00 
+AV1051 JBL Bluetooth Speaker        $89.95 
 -------------------------------------------
 Sales Total: $218.95
-Amount Paid: $223.00
-Change Due:  $4.05
+Amount Paid: $223.25
+Change Due:  $4.30
 -------------------------------------------
 Thank you for shopping with us at E-STORE! 
 Have a nice day :)

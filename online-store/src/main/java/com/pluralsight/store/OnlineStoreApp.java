@@ -223,12 +223,18 @@ public class OnlineStoreApp {
 
     private static void checkOut(ArrayList<Product> cart) {
         exitMenu = false;
+        //To hold user payment for checkOut()
         double parsedPay;
         String payment;
+
+        //To hold sales total and change due
         double totalCart;
         double changeFromPurchase;
+
+        //To hold order timestamp info
         LocalDateTime saleDate = LocalDateTime.now();
         String[] orderDateTimeFormats;
+
         String checkOutScreen = """
                 ======================================================================================
                 |                           * * * E-STORE CHECKOUT * * *                             |
@@ -407,11 +413,10 @@ public class OnlineStoreApp {
 
         for (Product p : cart) {
             //Calculating amount of padding for line item output
-            String orderDetails = p.getSku() + " " + p.getProductName() + " " + String.format("$%.2f \n", p.getPrice());
-//            String rightOutput = String.format("$%.2f \n", p.getPrice());
+            String orderDetailsOutput = p.getSku() + " " + p.getProductName() + " " + String.format("$%.2f \n", p.getPrice());
             String refString = "------------------------------------"; //length == 36
 
-            padding  = refString.length() - orderDetails.length();
+            padding  = refString.length() - orderDetailsOutput.length();
 //            padding = refString.length() - (leftOutput.length() + rightOutput.length()); //works okay but not every item aligns
         }
 
